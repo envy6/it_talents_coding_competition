@@ -1,66 +1,72 @@
 #!/usr/bin/python
-# 05.05.2017
-# Backpacker for it-talents code competition May 2017
-# AUTHOR: Kevin Gomez Buquerin
-# ALL RIGHTS RESERVED
+'''
+17.05.2017
+Backpacker for it-talents code competition May 2017
+AUTHOR: Kevin Gomez Buquerin
+ALL RIGHTS RESERVED
+'''
 
 # gets the user input
 def user_interaction_items():
-    print("[+] List an item like this: ITEMNAME:WEIGHT,VALUE ITEMNAME:WEIGHT,VALUE")
-    print("[+] With ITEMNAME as the name of the item (string), WEIGHT as the weight of ONE item \
-          (number in kg) and VALUE as the value of the corresponding item in EURO.")
-    user_input = input("[+] Please list all the items in the provided form: ")
-    return user_input
+    print("[+] List an item like this: WEIGHT,VALUE,'ITEMNAME'")
+    print("[+] With ITEMNAME as the name of the item (string, with single quotes), WEIGHT as the weight of ONE item (number in kg) and VALUE as the value of the corresponding item in EURO.")
+    print("[+] Press ENTER if you are finished with entering items.")
+    items = []
+    i = 0
+    while 1:
+        i += 1
+        try:
+            user_input = input("[+] Please add a new item: ")
+        except:
+            break
+        print("[+] Item " + str(user_input) +  " successfully added!")
+        items.append(user_input)
+    return items
 
 # checks user input
 def user_input_checker(user_input_dict):
     flag = 0        # flag to determine if the user input was provided correctly; 0=false 1=true
 
-# converts the user input into a dict
-def user_input_handler(user_input):
-    backpack_dict = {}
-    user_input_splt = user_input.split()
+def backpack_logic(items, max_weight):
+    def itemWeight(item): return item[0]
+    def itemValue(item): return item[1]
+    def itemName(item): return item[2]
 
-    for item in user_input_splt:
-        item_splt = item.split(":")
-        backpack_dict[item_splt[0]] = item_splt[1]
+    items_dict = {}
+    for n_items in range(len(items)+1):
+        for n_weight in range(max_weight+1):
+            if n_items == 0:
+                items_dict[n_items, n_weight] = 0
+            elif itemWeight(items[n_items-1]) > n_weight:
+                items_dict[n_items, n_weight] = items_dict[n_items-1, n_weight]
+            else:
+                items_dict[n_items, n_weight] = max(items_dict[n_items-1, n_weight], items_dict[n_items-1, n_weight-itemWeight(items[n_items-1])] + itemValue(items[n_items-1]))
 
-    return backpack_dict
-
-def  backpack_logic(backpack_items, max_weight):
-    def get_best_value(i, j):
-        if i == 0:
-            return 0
-        value, weight = backpack_items[i - 1]
-        if weight > j:
-            return get_best_value(i - 1, j)
+    items_list = []
+    n_items = len(items)
+    n_weight = max_weight
+    while n_items > 0:
+        if items_dict[n_items, n_weight] == items_dict[n_items-1, n_weight]:
+            n_items -= 1
         else:
-            return max(get_best_value(i - 1, j),
-                       get_best_value(i - 1, j - weight) + value)
-
-    j = max_weight
-    result = []
-    for i in range(len(backpack_items), 0, -1):
-        if get_best_value(i, j) != get_best_value(i - 1, j):
-            result.append(backpack_items[i - 1])
-            j -= backpack_items[i - 1][1]
-    result.reverse()
-    return get_best_value(len(backpack_items), max_weight), result
+            n_items -= 1
+            items_list.append(itemName(items[n_items]))
+            n_weight -= itemWeight(items[n_items])
+    
+    items_list.reverse()
+    return items_list
 
 if __name__ == "__main__":
-    # start here
     print("[*] Welcome to the backpacker.")
     # max_weight = input("[+] What's the maximal weight for your backpack? ")
     max_weight = 50  # debug value
-    print("[-] Maximal weight for the backpack set to " + str(max_weight) + ".")
+    print("[+] Maximal weight for the backpack set to " + str(max_weight) + ".")
 
-    # items = user_interaction_items()
-    items = 'ab:12,34 cd:56,78'
-    print("[d] Userinput: " + items + "...")
+    items = user_interaction_items()
+    print("[+] You added the followeing items: " + str(items) + ".")
 
-    items_dict = user_input_handler(items)
-    print("[d] Dict: " + str(items_dict) + "...")
-
-    backpack_items = [(4, 12), (2, 1), (6, 4), (1, 1), (2, 2),(4, 12), (2, 1), (6, 4), (1, 1), (2, 2)]
-    a = backpack_logic(backpack_items, max_weight)
-    print("[d] Logic calc: " + str(a))
+    print("[+] Start to calculate the perfect way to pack your backpack!")
+    result = backpack_logic(items, max_weight)
+    print("[+] Pack the following items: " + str(result) + ".")
+    # TODO: return the calculated weight too!
+    # TODO: color the console output
