@@ -1,0 +1,32 @@
+input:
+n = anzahl der gegenstaende
+m = maximalgewicht des rucksacks
+n/m input via konsole oder eingabemaske
+
+algo:
+n gegenstaende in rucksack 
+bestmoegliches gesamtgewicht erreichen
+gewicht g in kg
+wert w in euro
+rucksack darf nur maximalgewicht von m haben
+alle zahlen positiv
+
+konzept:
+user input: ITEM:[NUMBER,WEIGHT]
+in dict:
+keys = ITEM
+values = array with NUMBER and WEIGHT
+
+get keys: dictname is a
+list(a.keys())
+
+index keys: n for index
+list(a.keys())[n]
+
+get number:
+a['ITEM'][0]
+
+get weight
+a['ITEM'][1]
+
+
