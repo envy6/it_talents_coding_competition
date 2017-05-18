@@ -5,6 +5,7 @@ Backpacker for it-talents code competition May 2017
 AUTHOR: Kevin Gomez Buquerin
 ALL RIGHTS RESERVED
 '''
+# GLOBAL VARIABLES
 
 '''
 Function: user_interaction_items
@@ -80,26 +81,19 @@ def get_weight_sum(items_list, items):
             res += items[i][0]
     return res
 
-'''
-Function: input_checker
-Parameters: prov_input - provided input to check validity
-            check - what should be checked
-Return: 
-The function checks if a provied input is valid, depending on the flag. 
-'''
-def input_checker(prov_input, check):
-    rtn = False
-    if check == "int":
-        if type(prov_input) is int:
-            rtn = True
-        else:
-            print("[-] Provided value is incorrect! Type is not int.")
-            rtn = False
-
 if __name__ == "__main__":
     print("[*] Welcome to the backpacker.")
-    max_weight = input("[+] What's the maximal weight for your backpack? "))
-    # TODO check for integeger input
+    while True:
+        try:
+            max_weight = input("[+] What's the maximal weight for your backpack? ")
+            if isinstance(max_weight, int):
+                print("[+] A maximum weight of " + str(max_weight) + " for your backpack, successfully added!")
+                break
+            else:
+                print("[-] Please provide a number for the maximum weight of your backpack. Try again!")
+        except:
+                print("[-] Please provide a number for the maximum weight of your backpack. Try again!")
+
     #max_weight = 50  # debug value
     print("[+] Maximal weight for the backpack is set to " + str(max_weight) + ".")
 
